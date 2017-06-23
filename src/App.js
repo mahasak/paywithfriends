@@ -7,6 +7,9 @@ import {
   TableHeader,
   List,
   ListItem,
+  Snackbar,
+  Dialog, DialogTitle,
+  DialogContent, DialogActions,
   ListItemContent,
   ListItemAction,
   Icon,
@@ -16,6 +19,41 @@ import {
 class App extends Component {
   constructor(props) {
     super(props)
+
+    this.state = { isSnackbarActive: false };
+    this.handleOpenDialog = this.handleOpenDialog.bind(this);
+    this.handleCloseDialog = this.handleCloseDialog.bind(this);
+    this.handleShowSnackbar = this.handleShowSnackbar.bind(this);
+    this.handleTimeoutSnackbar = this.handleTimeoutSnackbar.bind(this);
+    this.handleClickActionSnackbar = this.handleClickActionSnackbar.bind(this);
+  }
+
+  handleOpenDialog() {
+    this.setState({
+      openDialog: true
+    });
+  }
+
+  handleCloseDialog() {
+    this.setState({
+      openDialog: false
+    });
+  }
+
+  handleShowSnackbar() {
+    this.setState({
+      isSnackbarActive: true,
+      btnBgColor: '#' +
+        Math.floor(Math.random() * 0xFFFFFF).toString(16)
+    });
+  }
+  handleTimeoutSnackbar() {
+    this.setState({ isSnackbarActive: false });
+  }
+  handleClickActionSnackbar() {
+    this.setState({
+      btnBgColor: ''
+    });
   }
 
   signIn = () => {
@@ -52,6 +90,7 @@ class App extends Component {
     return (
       <Layout fixedHeader>
           <Header title="PayWithFriends">
+              <Button raised accent ripple onClick={this.handleOpenDialog}>Add</Button>
               <IconButton name="more_vert" id="demo-menu-lower-right" />
               <Menu target="demo-menu-lower-right" align="right">
                   <MenuItem>Copy Link</MenuItem>
@@ -109,6 +148,32 @@ class App extends Component {
                 <TableHeader name="owner" tooltip="The amazing material name">Treat</TableHeader>
                 <TableHeader numeric name="price" cellFormatter={(price) => `\$${price.toFixed(2)}`} tooltip="Price pet unit">Price</TableHeader>
             </DataTable>
+            <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
+              <DialogTitle>New Item</DialogTitle>
+              <DialogContent>
+                <Textfield
+                    onChange={() => {}}
+                    label="Item"
+                    floatingLabel
+                    style={{width: '200px'}}
+                />
+                <Textfield
+                    onChange={() => {}}
+                    label="Price"
+                    floatingLabel
+                    style={{width: '200px'}}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button type='button' onClick={this.handleShowSnackbar}>Add</Button>
+                <Button type='button' onClick={this.handleCloseDialog}>Cancel</Button>
+              </DialogActions>
+            </Dialog>
+            <Snackbar
+              active={this.state.isSnackbarActive}
+              onClick={this.handleClickActionSnackbar}
+              onTimeout={this.handleTimeoutSnackbar}
+              action="Undo">Item Add.</Snackbar>
             
           </Content>
         </Layout>

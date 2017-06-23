@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import { Auth, Data } from './components';
 import React, { Component } from 'react';
 import { 
+  Button,
   Switch,
   Layout, Header, Textfield, Content, Menu, MenuItem , IconButton, Drawer, Navigation} from "react-mdl"
 
@@ -22,11 +23,17 @@ class App extends Component {
 
   renderSignIn = () => {
     return (
-      <div style={{ padding: '1em', fontSize: '2em', textAlign: 'center' }}>
-        Please sign in with Facebook…
-        <br /><br />
-        <button onClick={this.signIn}>Sign in with Facebook</button>
-      </div>
+          <div style={{ padding: '1em', fontSize: '2em', textAlign: 'center', position: 'absolute' , 
+    top:200 ,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    margin: 'auto' }}>
+            Pay With Friends
+          <br /><br />
+          <Button raised colored ripple onClick={this.signIn}>Sign in with Facebook</Button>
+        </div>
+      
     )
   }
 
@@ -36,16 +43,7 @@ class App extends Component {
     }
 
     return (
-      <div>
-        Logged In
-      </div>
-    )
-  }
-
-  render() {
-    return (
-      <div className="App">
-         <Layout fixedHeader>
+      <Layout fixedHeader>
           <Header title="PayWithFriends">
               <IconButton name="more_vert" id="demo-menu-lower-right" />
               <Menu target="demo-menu-lower-right" align="right">
@@ -73,6 +71,13 @@ class App extends Component {
         </Drawer>
           <Content />
         </Layout>
+    )
+  }
+
+  render() {
+    return (
+      <div className="App">
+         
         <Auth>{this.renderApp}</Auth>
       </div>
     );

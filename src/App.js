@@ -3,6 +3,13 @@ import { Auth, Data } from './components';
 import React, { Component } from 'react';
 import { 
   Button,
+  DataTable,
+  TableHeader,
+  List,
+  ListItem,
+  ListItemContent,
+  ListItemAction,
+  Icon,
   Switch,
   Layout, Header, Textfield, Content, Menu, MenuItem , IconButton, Drawer, Navigation} from "react-mdl"
 
@@ -69,7 +76,41 @@ class App extends Component {
                 <a href="#">Sign Out</a>
             </Navigation>
         </Drawer>
-          <Content />
+          <Content>
+            <List style={{width: '100%'}}>
+              <ListItem twoLine>
+                <ListItemContent avatar="person" subtitle="62 THB">Prapat</ListItemContent>
+                <ListItemAction>
+                  <a href="#"><Icon name="star" /></a>
+                </ListItemAction>
+              </ListItem>
+              <ListItem twoLine>
+                <ListItemContent avatar="person" subtitle="62 THB">Varokas</ListItemContent>
+                <ListItemAction>
+                  <a href="#"><Icon name="star" /></a>
+                </ListItemAction>
+              </ListItem>
+              <ListItem twoLine>
+                <ListItemContent avatar="person" subtitle="62 THB">Max</ListItemContent>
+                <ListItemAction>
+                  <a href="#"><Icon name="star" /></a>
+                </ListItemAction>
+              </ListItem>
+            </List>
+            <DataTable selectable style={{ width: '100%'}}
+                shadow={0}
+                rows={[
+                    {material: 'Acrylic (Transparent)', quantity: 25, price: 2.90},
+                    {material: 'Plywood (Birch)', quantity: 50, price: 1.25},
+                    {material: 'Laminate (Gold on Blue)', quantity: 10, price: 2.35}
+                ]}
+            >
+                <TableHeader name="material" tooltip="The amazing material name">Items</TableHeader>
+                <TableHeader name="owner" tooltip="The amazing material name">Treat</TableHeader>
+                <TableHeader numeric name="price" cellFormatter={(price) => `\$${price.toFixed(2)}`} tooltip="Price pet unit">Price</TableHeader>
+            </DataTable>
+            
+          </Content>
         </Layout>
     )
   }

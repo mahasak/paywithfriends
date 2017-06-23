@@ -1,1 +1,1 @@
-export { FirebaseLogin } from './FirebaseLogin'
+export { Auth, Data, DataRef, defaultRenderLoading, defaultRenderError, defaultRenderData } from './FirebaseReact'

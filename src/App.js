@@ -1,8 +1,7 @@
 import firebase from 'firebase';
-import { Auth, Data } from './components/FirebaseReact';
-
+import { Auth, Data } from './components';
 import React, { Component } from 'react';
-import './App.css';
+import { Layout, Header, Textfield, Content, Menu, MenuItem , IconButton, Drawer, Navigation} from "react-mdl"
 
 class App extends Component {
   constructor(props) {
@@ -44,10 +43,23 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          
-          <h2>Welcome to React</h2>
-        </div>
+         <Layout fixedHeader>
+          <Header title="PayWithFriends">
+              <IconButton name="more_vert" id="demo-menu-lower-right" />
+              <Menu target="demo-menu-lower-right" align="right">
+                  <MenuItem>Copy Link</MenuItem>
+                  <MenuItem>Notify Bills</MenuItem>
+                  <MenuItem>Reset</MenuItem>
+              </Menu>
+          </Header>
+          <Drawer title="Pay With Friends">
+            <Navigation>
+                <a href="#">Create New Bill</a>
+                <a href="#">Sign Out</a>
+            </Navigation>
+        </Drawer>
+          <Content />
+        </Layout>
         <Auth>{this.renderApp}</Auth>
       </div>
     );

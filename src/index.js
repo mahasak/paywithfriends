@@ -3,7 +3,8 @@ import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
-import './index.css';
+import 'react-mdl/extra/material.css';
+import 'react-mdl/extra/material.js';
 
 let config = {
     apiKey: "AIzaSyD8bvY3ZAiGiS1svEiz6jiwEOawg1Lp0qY",

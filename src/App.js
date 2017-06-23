@@ -1,8 +1,9 @@
+import firebase from 'firebase';
+import { Auth, Data } from './components/FirebaseReact';
+
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import firebase from 'firebase';
-import { FirebaseLogin } from './components';
 
 class App extends Component {
   constructor(props) {
@@ -11,7 +12,6 @@ class App extends Component {
 
   signIn = () => {
     var provider = new firebase.auth.FacebookAuthProvider()
-    provider.setCustomParameters({ 'display': 'page' })
     firebase.auth().signInWithRedirect(provider).then(result => {
       var user = result.user
       console.log('Signed in!!')
@@ -49,7 +49,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <FirebaseLogin>{this.renderApp}</FirebaseLogin>
+        <Auth>{this.renderApp}</Auth>
       </div>
     );
   }

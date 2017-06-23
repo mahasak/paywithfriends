@@ -1,9 +1,9 @@
+import * as firebase from 'firebase'
+import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
-import * as firebase from 'firebase'
 
 let config = {
     apiKey: "AIzaSyD8bvY3ZAiGiS1svEiz6jiwEOawg1Lp0qY",

@@ -1,7 +1,9 @@
 import firebase from 'firebase';
 import { Auth, Data } from './components';
 import React, { Component } from 'react';
-import { Layout, Header, Textfield, Content, Menu, MenuItem , IconButton, Drawer, Navigation} from "react-mdl"
+import { 
+  Switch,
+  Layout, Header, Textfield, Content, Menu, MenuItem , IconButton, Drawer, Navigation} from "react-mdl"
 
 class App extends Component {
   constructor(props) {
@@ -54,6 +56,17 @@ class App extends Component {
           </Header>
           <Drawer title="Pay With Friends">
             <Navigation>
+                
+                <dl>
+                  <dt>
+                    <Switch ripple id="service" defaultChecked>Service Charge</Switch>
+                  </dt>
+                </dl>
+                <dl>
+                  <dt>
+                    <Switch ripple id="vat" defaultChecked>VAT</Switch>
+                  </dt>
+                </dl>
                 <a href="#">Create New Bill</a>
                 <a href="#">Sign Out</a>
             </Navigation>

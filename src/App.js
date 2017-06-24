@@ -107,6 +107,9 @@ class App extends Component {
     addItem = (itemName, itemPrice) => {
         var items = this.state.items.slice()
         items.push({item: itemName, price: parseFloat(itemPrice)})
+        var billId = 'id1'
+        this.database.ref(`bills/${billId}/items`)
+                              .push({name: itemName, own: "", price : parseInt(itemPrice)});
         this.setState({ items: items })
     }
 

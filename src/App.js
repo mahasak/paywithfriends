@@ -86,9 +86,10 @@ class App extends Component {
     }
 
     signIn = () => {
+        console.log("Login")
         var provider = new firebase.auth.FacebookAuthProvider()
         firebase.auth().signInWithRedirect(provider).then(result => {
-            //var user = result.user
+            var user = result.user
             console.log('Signed in!!')
         }).catch(error => {
             alert('Cannot sign in: ' + String(error))
@@ -105,7 +106,7 @@ class App extends Component {
 
     renderSignIn = () => {
         return (
-            <LoginPanel logo={logo} onSignin={this.signIn} />
+            <LoginPanel logo={logo} onSignIn={this.signIn} />
         )
     }
 

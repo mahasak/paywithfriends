@@ -33,6 +33,11 @@ class App extends Component {
         this.state = { 
             items: [],
             fields: [],
+            payer: [
+                {id:1, name: "Prapat Sumlee", amount: 100},
+                {id:2, name: "Mahasak P", amount: 100},
+
+            ],
             isSnackbarActive: false 
         };
         this.handleOpenDialog = this.handleOpenDialog.bind(this);
@@ -182,26 +187,7 @@ class App extends Component {
                 </Navigation>
             </Drawer>
             <Content>
-                <List style={{width: '100%'}}>
-                <ListItem twoLine>
-                    <ListItemContent avatar="person" subtitle="62 THB">Prapat</ListItemContent>
-                    <ListItemAction>
-                    <a href="#"><Icon name="star" /></a>
-                    </ListItemAction>
-                </ListItem>
-                <ListItem twoLine>
-                    <ListItemContent avatar="person" subtitle="62 THB">Varokas</ListItemContent>
-                    <ListItemAction>
-                    <a href="#"><Icon name="star" /></a>
-                    </ListItemAction>
-                </ListItem>
-                <ListItem twoLine>
-                    <ListItemContent avatar="person" subtitle="62 THB">Max</ListItemContent>
-                    <ListItemAction>
-                    <a href="#"><Icon name="star" /></a>
-                    </ListItemAction>
-                </ListItem>
-                </List>
+                <BillPayer payer={this.state.payer} />
                 <DataTable selectable style={{ width: '97%'}}
                     shadow={0}
                     rows={this.state.items}
@@ -252,6 +238,21 @@ class App extends Component {
             <Auth>{this.renderApp}</Auth>
         </div>
         );
+    }
+}
+
+class BillPayer extends React.Component {
+
+    render () {
+        const payer = this.props.payer
+        
+        return <List style={{width: '95%', margin: 0}}>
+              {payer.map(function(object,i) {
+                  return <ListItem key={object.id} twoLine>
+                    <ListItemContent avatar="person" subtitle={object.amount}>{object.name}</ListItemContent>
+                </ListItem>
+              })}
+        </List>
     }
 }
 

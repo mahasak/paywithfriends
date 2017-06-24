@@ -15,7 +15,19 @@ import {
     LoginPanel
 } from './components';
 import logo from './logo.png';
+function convertFromFirebase(data) {
+        var emptyData = []
+        if (data == null || data == undefined) {
+            return []
+        }
 
+        var ids = Object.keys(data)
+        return ids.map(id => {
+            var beforeInfo = data[id]
+            beforeInfo.id = id
+            return beforeInfo
+        })
+}
 class App extends Component {
     constructor(props) {
         super(props)
@@ -24,16 +36,25 @@ class App extends Component {
         this.state = { 
             items: [],
             fields: [],
-            payer: [
-                {id:1, name: "Prapat Sumlee", amount: 100},
-                {id:2, name: "Mahasak P", amount: 100},
-            ],
+            payer: [],
             isSnackbarActive: false 
         };
     }
 
-    componentdidMount = () => {
-        this.handlePayerData('id1')
+    componentDidMount = () => {
+        var billId = 'id1'
+        var payerRef = this.database.ref(`bills/${billId}/users`);
+        var itemRef = this.database.ref(`bills/${billId}/items`);
+
+        payerRef.once('value').then((snapshot) => {
+            var payer = convertFromFirebase(snapshot.val())
+            this.setState({ payer: payer })
+        });
+
+        itemRef.once('value').then((snapshot) => {
+            var items = convertFromFirebase(snapshot.val())
+            this.setState({ items: items })
+        });
     }
 
     handleOnChange = (e,val) => {
@@ -87,28 +108,6 @@ class App extends Component {
         var items = this.state.items.slice()
         items.push({item: itemName, price: parseFloat(itemPrice)})
         this.setState({ items: items })
-    }
-
-    convertFromFirebase = (data) => {
-        var emptyData = []
-        if (data == null || data == undefined) {
-            return []
-        }
-
-        var ids = Object.keys(data)
-        return ids.map(id => {
-            var beforeInfo = data[id]
-            beforeInfo.id = id
-            return beforeInfo
-        })
-    }
-
-    handlePayerData = (billId) => {
-        var payerData = this.database.ref('bills/' + billId + '/users');
-        payerData.on('value', function(snapshot) {
-            var payer = this.convertFromFirebase(snapshot.val())
-            this.setState({ payer: payer })
-        });
     }
 
     signIn = () => {

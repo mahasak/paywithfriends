@@ -10,7 +10,7 @@ export class BillItemList extends Component {
                     shadow={0}
                     rows={this.props.items}
                 >
-                    <TableHeader name="item" tooltip="รายการค่าใช้จ่าย">Items</TableHeader>
+                    <TableHeader name="name" tooltip="รายการค่าใช้จ่าย">Items</TableHeader>
                     <TableHeader numeric name="price" cellFormatter={(price) => price.toFixed(2) } tooltip="ราคา">Price</TableHeader>
                 </DataTable>
     }

@@ -19,7 +19,7 @@ import logo from './logo.png';
 class App extends Component {
     constructor(props) {
         super(props)
-        
+
         this.database = firebase.database()
         this.state = { 
             items: [],
@@ -30,6 +30,10 @@ class App extends Component {
             ],
             isSnackbarActive: false 
         };
+    }
+
+    componentdidMount = () => {
+        this.handlePayerData('id1')
     }
 
     handleOnChange = (e,val) => {
@@ -83,6 +87,28 @@ class App extends Component {
         var items = this.state.items.slice()
         items.push({item: itemName, price: parseFloat(itemPrice)})
         this.setState({ items: items })
+    }
+
+    convertFromFirebase = (data) => {
+        var emptyData = []
+        if (data == null || data == undefined) {
+            return []
+        }
+
+        var ids = Object.keys(data)
+        return ids.map(id => {
+            var beforeInfo = data[id]
+            beforeInfo.id = id
+            return beforeInfo
+        })
+    }
+
+    handlePayerData = (billId) => {
+        var payerData = this.database.ref('bills/' + billId + '/users');
+        payerData.on('value', function(snapshot) {
+            var payer = this.convertFromFirebase(snapshot.val())
+            this.setState({ payer: payer })
+        });
     }
 
     signIn = () => {

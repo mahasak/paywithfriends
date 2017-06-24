@@ -1,29 +1,20 @@
 import firebase from 'firebase';
-import { Auth, Data } from './components';
 import React, { Component } from 'react';
 import { 
-    Button,
-    DataTable,
-    TableHeader,
-    List,
-    ListItem,
-    Snackbar,
-    Dialog, DialogTitle,
-    DialogContent, DialogActions,
-    ListItemContent,
-    ListItemAction,
-    Icon,
-    Switch,
-    Layout, 
-    Header, 
-    Textfield, 
-    Content, 
-    Menu, 
-    MenuItem , 
-    IconButton, 
-    Drawer, 
-    Navigation
+    Content,
+    Layout,
+    Snackbar
 } from "react-mdl"
+import { 
+    AddItemDialog,
+    AppHeader,
+    AppMenu,
+    Auth, 
+    BillItemList,
+    BillPayer,
+    Data,
+    LoginPanel
+} from './components';
 import logo from './logo.png';
 
 class App extends Component {
@@ -36,10 +27,10 @@ class App extends Component {
             payer: [
                 {id:1, name: "Prapat Sumlee", amount: 100},
                 {id:2, name: "Mahasak P", amount: 100},
-
             ],
             isSnackbarActive: false 
         };
+
         this.handleOnChange = this.handleOnChange.bind(this)
         this.handleOpenDialog = this.handleOpenDialog.bind(this);
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
@@ -122,36 +113,7 @@ class App extends Component {
 
     renderSignIn = () => {
         return (
-            <div style={{backgroundColor: "#2C98F0", top: 0}}>
-                <div style={{ 
-                    padding: '1em', 
-                    fontSize: '2em', 
-                    textAlign: 'center', 
-                    position: 'absolute' , 
-                    top:0 ,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    color: '#FFFFFF',
-                    backgroundColor: '#2C98F0',
-                    margin: 'auto' }}>
-                    <div >
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <img src={logo} /><br/><br/>
-                    Pay or Die !!!<br/>
-                    <span style={{ fontSize: '14px'}}>
-                    Filthy human, lol
-                    </span>
-                <br/><br/>
-                <Button raised colored ripple onClick={this.signIn}>Sign in with Facebook</Button>
-                </div>
-                </div>
-            </div>
+            <LoginPanel logo={logo} onSignin={this.signIn} />
         )
     }
 
@@ -162,41 +124,11 @@ class App extends Component {
 
         return (
         <Layout fixedHeader>
-            <Header title="PayWithFriends">
-                <Button raised accent ripple onClick={this.handleOpenDialog}>Add</Button>
-                <IconButton name="more_vert" id="demo-menu-lower-right" />
-                <Menu target="demo-menu-lower-right" align="right">
-                    <MenuItem>Copy Link</MenuItem>
-                    <MenuItem>Notify Bills</MenuItem>
-                    <MenuItem>Reset</MenuItem>
-                </Menu>
-            </Header>
-            <Drawer title="Pay With Friends">
-                <Navigation>             
-                    <dl>
-                    <dt>
-                        <Switch ripple id="service" defaultChecked>Service Charge</Switch>
-                    </dt>
-                    </dl>
-                    <dl>
-                    <dt>
-                        <Switch ripple id="vat" defaultChecked>VAT</Switch>
-                    </dt>
-                    </dl>
-                    <a href="#">Create New Bill</a>
-                    <a href="#" onClick={this.signOut} >Sign Out</a>
-                </Navigation>
-            </Drawer>
+            <AppHeader onOpenNewItemDialog={this.handleOpenDialog} />
+            <AppMenu onSignOut={this.signOut}/>
             <Content>
                 <BillPayer payer={this.state.payer} />
-                <DataTable selectable style={{ width: '97%'}}
-                    shadow={0}
-                    rows={this.state.items}
-                >
-                    <TableHeader name="item" tooltip="รายการค่าใช้จ่าย">Items</TableHeader>
-                    <TableHeader name="owner" tooltip="ใครจะเหมาจ่าย">Treat</TableHeader>
-                    <TableHeader numeric name="price" cellFormatter={(price) => `\ ${price.toFixed(2)}`} tooltip="ราคา">Price</TableHeader>
-                </DataTable>
+                <BillItemList items={this.state.items} />
                 <AddItemDialog 
                     stateOpenDialog={this.state.openDialog} 
                     handleCloseDialog={this.handleCloseDialog}
@@ -216,55 +148,9 @@ class App extends Component {
     render() {
         return (
         <div className="App">
-            
             <Auth>{this.renderApp}</Auth>
         </div>
         );
-    }
-}
-
-class BillPayer extends React.Component {
-
-    render () {
-        const payer = this.props.payer
-        
-        return <List style={{width: '95%', margin: 0}}>
-              {payer.map(function(object,i) {
-                  return <ListItem key={object.id} twoLine>
-                    <ListItemContent avatar="person" subtitle={object.amount}>{object.name}</ListItemContent>
-                </ListItem>
-              })}
-        </List>
-    }
-}
-
-class AddItemDialog extends React.Component {
-    render() {
-        return <Dialog open={this.props.stateOpenDialog} onCancel={this.props.handleCloseDialog}>
-                    <DialogTitle>New Item</DialogTitle>
-                    <DialogContent>
-                        <Textfield
-                            onChange={this.props.handleOnChange}
-                            id="itemId"
-                            name="item"
-                            label="Item"
-                            floatingLabel
-                            style={{width: '200px'}}
-                        />
-                        <Textfield
-                            onChange={this.props.handleOnChange}
-                            id="price"
-                            name="price"
-                            label="Price"
-                            floatingLabel
-                            style={{width: '200px'}}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button type='button' onClick={this.props.handleAddItem}>Add</Button>
-                        <Button type='button' onClick={this.props.handleCloseDialog}>Close</Button>
-                    </DialogActions>
-                </Dialog>
     }
 }
 

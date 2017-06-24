@@ -15,19 +15,21 @@ import {
     LoginPanel
 } from './components';
 import logo from './logo.png';
+
 function convertFromFirebase(data) {
-        var emptyData = []
+        let emptyData = []
         if (data == null || data == undefined) {
             return []
         }
 
-        var ids = Object.keys(data)
+        let ids = Object.keys(data)
         return ids.map(id => {
-            var beforeInfo = data[id]
+            let beforeInfo = data[id]
             beforeInfo.id = id
             return beforeInfo
         })
 }
+
 class App extends Component {
     constructor(props) {
         super(props)
@@ -42,19 +44,49 @@ class App extends Component {
     }
 
     componentDidMount = () => {
-        var billId = 'id1'
-        var payerRef = this.database.ref(`bills/${billId}/users`);
-        var itemRef = this.database.ref(`bills/${billId}/items`);
+        let billId = 'id1'
 
-        payerRef.once('value').then((snapshot) => {
-            var payer = convertFromFirebase(snapshot.val())
-            this.setState({ payer: payer })
-        });
+        let payerRef = this.database.ref(`bills/${billId}/users`);
+        let itemRef = this.database.ref(`bills/${billId}/items`);
 
-        itemRef.once('value').then((snapshot) => {
-            var items = convertFromFirebase(snapshot.val())
-            this.setState({ items: items })
-        });
+        payerRef.on('value', this.onPayerUpdate, this.onPayerError)
+        itemRef.on('value', this.onItemsUpdate, this.onItemsError)
+    }
+
+    onPayerUpdate = (snapshot) => {
+        let payer = convertFromFirebase(snapshot.val())
+        this.setState({ payer: payer })
+    }
+
+    onPayerError = (error) => {
+        //
+    }
+
+    onItemsUpdate = (snapshot) => {
+        let payer = this.state.payer
+        let items = convertFromFirebase(snapshot.val())
+        let total = this.getTotal(items)
+        let summaryPrice = parseFloat((total * 1.1) + ((total* 1.1) * 0.07)).toFixed(2)
+        let amount = summaryPrice / 2
+        console.log(amount)
+        console.log(payer)
+        payer = payer.map((x)=>{
+            x.amount = parseFloat(amount).toFixed(2)
+        })
+        this.setState({ items: items })
+    }
+
+    onItemsError = (error) => {
+        //
+    }
+
+    getTotal = (items) => {
+        if (items.length <= 0) return 0
+        if (items.length == 1) return parseFloat(items[0].price)
+        let tmp = items.reduce((a,b) => {
+            return {price: parseFloat(a.price) + parseFloat(b.price)} 
+        })
+        return tmp.price
     }
 
     handleOnChange = (e,val) => {
@@ -115,9 +147,9 @@ class App extends Component {
 
     signIn = () => {
         console.log("Login")
-        var provider = new firebase.auth.FacebookAuthProvider()
+        let provider = new firebase.auth.FacebookAuthProvider()
         firebase.auth().signInWithRedirect(provider).then(result => {
-            var user = result.user
+            let user = result.user
             console.log('Signed in!!')
         }).catch(error => {
             alert('Cannot sign in: ' + String(error))

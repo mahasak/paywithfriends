@@ -19,7 +19,8 @@ import logo from './logo.png';
 class App extends Component {
     constructor(props) {
         super(props)
-
+        
+        this.database = firebase.database()
         this.state = { 
             items: [],
             fields: [],
@@ -80,8 +81,7 @@ class App extends Component {
 
     addItem = (itemName, itemPrice) => {
         var items = this.state.items.slice()
-        items.push({item: itemName, price: parseFloat(itemPrice)},)
-        console.log(items)
+        items.push({item: itemName, price: parseFloat(itemPrice)})
         this.setState({ items: items })
     }
 

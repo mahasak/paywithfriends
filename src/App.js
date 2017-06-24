@@ -40,6 +40,7 @@ class App extends Component {
             ],
             isSnackbarActive: false 
         };
+        this.handleOnChange = this.handleOnChange.bind(this)
         this.handleOpenDialog = this.handleOpenDialog.bind(this);
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
         this.handleShowSnackbar = this.handleShowSnackbar.bind(this);
@@ -53,13 +54,13 @@ class App extends Component {
         this.setState({fields: fields})
     }
 
-    handleOpenDialog() {
+    handleOpenDialog = () => {
         this.setState({
             openDialog: true
         });
     }
 
-    handleCloseDialog() {
+    handleCloseDialog = () => {
         this.setState({
             openDialog: false
         });
@@ -196,31 +197,12 @@ class App extends Component {
                     <TableHeader name="owner" tooltip="ใครจะเหมาจ่าย">Treat</TableHeader>
                     <TableHeader numeric name="price" cellFormatter={(price) => `\ ${price.toFixed(2)}`} tooltip="ราคา">Price</TableHeader>
                 </DataTable>
-                <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
-                <DialogTitle>New Item</DialogTitle>
-                <DialogContent>
-                    <Textfield
-                        onChange={this.handleOnChange}
-                        id="itemId"
-                        name="item"
-                        label="Item"
-                        floatingLabel
-                        style={{width: '200px'}}
-                    />
-                    <Textfield
-                        onChange={this.handleOnChange}
-                        id="price"
-                        name="price"
-                        label="Price"
-                        floatingLabel
-                        style={{width: '200px'}}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button type='button' onClick={this.handleAddItem}>Add</Button>
-                    <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
-                </DialogActions>
-                </Dialog>
+                <AddItemDialog 
+                    stateOpenDialog={this.state.openDialog} 
+                    handleCloseDialog={this.handleCloseDialog}
+                    handleOnChange={this.handleOnChange}
+                    handleAddItem={this.handleAddItem}
+                />
                 <Snackbar
                     active={this.state.isSnackbarActive}
                     onClick={this.handleClickActionSnackbar}
@@ -253,6 +235,36 @@ class BillPayer extends React.Component {
                 </ListItem>
               })}
         </List>
+    }
+}
+
+class AddItemDialog extends React.Component {
+    render() {
+        return <Dialog open={this.props.stateOpenDialog} onCancel={this.props.handleCloseDialog}>
+                    <DialogTitle>New Item</DialogTitle>
+                    <DialogContent>
+                        <Textfield
+                            onChange={this.props.handleOnChange}
+                            id="itemId"
+                            name="item"
+                            label="Item"
+                            floatingLabel
+                            style={{width: '200px'}}
+                        />
+                        <Textfield
+                            onChange={this.props.handleOnChange}
+                            id="price"
+                            name="price"
+                            label="Price"
+                            floatingLabel
+                            style={{width: '200px'}}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button type='button' onClick={this.props.handleAddItem}>Add</Button>
+                        <Button type='button' onClick={this.props.handleCloseDialog}>Close</Button>
+                    </DialogActions>
+                </Dialog>
     }
 }
 

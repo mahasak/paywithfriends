@@ -7,7 +7,7 @@ import {
     MenuItem
 } from "react-mdl"
 
-export class AppHeader extends React.Component {
+export class AppHeader extends Component {
     render() {
         return <Header title="PayWithFriends">
                 <Button raised accent ripple onClick={this.props.onOpenNewItemDialog}>Add</Button>

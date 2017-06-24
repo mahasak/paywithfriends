@@ -8,7 +8,7 @@ import {
     Button
 } from "react-mdl"
 
-export class AddItemDialog extends React.Component {
+export class AddItemDialog extends Component {
     render() {
         return <Dialog open={this.props.stateOpenDialog} onCancel={this.props.handleCloseDialog}>
                     <DialogTitle>New Item</DialogTitle>

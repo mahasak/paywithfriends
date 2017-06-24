@@ -12,7 +12,6 @@ import {
     Auth, 
     BillItemList,
     BillPayer,
-    Data,
     LoginPanel
 } from './components';
 import logo from './logo.png';
@@ -96,7 +95,7 @@ class App extends Component {
     signIn = () => {
         var provider = new firebase.auth.FacebookAuthProvider()
         firebase.auth().signInWithRedirect(provider).then(result => {
-            var user = result.user
+            //var user = result.user
             console.log('Signed in!!')
         }).catch(error => {
             alert('Cannot sign in: ' + String(error))

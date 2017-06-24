@@ -5,7 +5,7 @@ import {
     Switch
 } from "react-mdl"
 
-export class AppMenu extends React.Component {
+export class AppMenu extends Component {
     render() {
         return <Drawer title="Pay With Friends">
                 <Navigation>             

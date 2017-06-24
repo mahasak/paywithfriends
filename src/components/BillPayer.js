@@ -5,7 +5,7 @@ import {
     ListItemContent
 } from "react-mdl"
 
-export class BillPayer extends React.Component {
+export class BillPayer extends Component {
 
     render () {
         const payer = this.props.payer

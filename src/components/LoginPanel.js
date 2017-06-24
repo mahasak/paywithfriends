@@ -3,7 +3,7 @@ import {
     Button
 } from "react-mdl"
 
-export class LoginPanel extends React.Component {
+export class LoginPanel extends Component {
 
     render () {
         return <div style={{backgroundColor: "#2C98F0", top: 0}}>
@@ -26,7 +26,7 @@ export class LoginPanel extends React.Component {
                     <br/>
                     <br/>
                     <br/>
-                    <img src={this.props.logo} /><br/><br/>
+                    <img src={this.props.logo} alt="logo"/><br/><br/>
                     Pay or Die !!!<br/>
                     <span style={{ fontSize: '14px'}}>
                     Filthy human, lol

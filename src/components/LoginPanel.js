@@ -32,7 +32,7 @@ export class LoginPanel extends Component {
                     Filthy human, lol
                     </span>
                 <br/><br/>
-                <Button raised colored ripple onClick={this.props.signIn}>Sign in with Facebook</Button>
+                <Button raised colored ripple onClick={this.props.onSignIn}>Sign in with Facebook</Button>
                 </div>
                 </div>
             </div>

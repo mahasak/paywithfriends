@@ -30,7 +30,11 @@ class App extends Component {
     constructor(props) {
         super(props)
 
-        this.state = { isSnackbarActive: false };
+        this.state = { 
+            items: [],
+            fields: [],
+            isSnackbarActive: false 
+        };
         this.handleOpenDialog = this.handleOpenDialog.bind(this);
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
         this.handleShowSnackbar = this.handleShowSnackbar.bind(this);
@@ -38,34 +42,58 @@ class App extends Component {
         this.handleClickActionSnackbar = this.handleClickActionSnackbar.bind(this);
     }
 
+    handleOnChange = (e,val) => {
+        let fields = this.state.fields
+        fields[e.target.name] = e.target.value
+        this.setState({fields: fields})
+    }
+
     handleOpenDialog() {
         this.setState({
-        openDialog: true
+            openDialog: true
         });
     }
 
     handleCloseDialog() {
         this.setState({
-        openDialog: false
+            openDialog: false
         });
+    }
+
+    handleAddItem = () => {
+        this.addItem(this.state.fields.item, this.state.fields.price)
+        document.getElementById("itemId").value = ''
+        document.getElementById("price").value = ''
+        this.setState({
+            openDialog: false
+        });
+        this.handleShowSnackbar()
     }
 
     handleShowSnackbar() {
         this.setState({
-        isSnackbarActive: true,
-        btnBgColor: '#' +
-            Math.floor(Math.random() * 0xFFFFFF).toString(16)
+            isSnackbarActive: true,
+            btnBgColor: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16)
         });
     }
 
     handleTimeoutSnackbar() {
-        this.setState({ isSnackbarActive: false });
+        this.setState({ 
+            isSnackbarActive: false 
+        });
     }
 
     handleClickActionSnackbar() {
         this.setState({
-        btnBgColor: ''
+            btnBgColor: ''
         });
+    }
+
+    addItem = (itemName, itemPrice) => {
+        var items = this.state.items.slice()
+        items.push({item: itemName, price: parseFloat(itemPrice)},)
+        console.log(items)
+        this.setState({ items: items })
     }
 
     signIn = () => {
@@ -75,6 +103,14 @@ class App extends Component {
             console.log('Signed in!!')
         }).catch(error => {
             alert('Cannot sign in: ' + String(error))
+        })
+    }
+
+    signOut = () => {
+        firebase.auth().signOut().then(function() {
+            console.log('Sign out!!')
+        }).catch(function(error) {
+            alert('Cannot sign out')
         })
     }
 
@@ -142,7 +178,7 @@ class App extends Component {
                     </dt>
                     </dl>
                     <a href="#">Create New Bill</a>
-                    <a href="#">Sign Out</a>
+                    <a href="#" onClick={this.signOut} >Sign Out</a>
                 </Navigation>
             </Drawer>
             <Content>
@@ -166,44 +202,44 @@ class App extends Component {
                     </ListItemAction>
                 </ListItem>
                 </List>
-                <DataTable selectable style={{ width: '100%'}}
+                <DataTable selectable style={{ width: '97%'}}
                     shadow={0}
-                    rows={[
-                        {material: 'Acrylic (Transparent)', quantity: 25, price: 2.90},
-                        {material: 'Plywood (Birch)', quantity: 50, price: 1.25},
-                        {material: 'Laminate (Gold on Blue)', quantity: 10, price: 2.35}
-                    ]}
+                    rows={this.state.items}
                 >
-                    <TableHeader name="material" tooltip="The amazing material name">Items</TableHeader>
-                    <TableHeader name="owner" tooltip="The amazing material name">Treat</TableHeader>
-                    <TableHeader numeric name="price" cellFormatter={(price) => `\$${price.toFixed(2)}`} tooltip="Price pet unit">Price</TableHeader>
+                    <TableHeader name="item" tooltip="รายการค่าใช้จ่าย">Items</TableHeader>
+                    <TableHeader name="owner" tooltip="ใครจะเหมาจ่าย">Treat</TableHeader>
+                    <TableHeader numeric name="price" cellFormatter={(price) => `\ ${price.toFixed(2)}`} tooltip="ราคา">Price</TableHeader>
                 </DataTable>
                 <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
                 <DialogTitle>New Item</DialogTitle>
                 <DialogContent>
                     <Textfield
-                        onChange={() => {}}
+                        onChange={this.handleOnChange}
+                        id="itemId"
+                        name="item"
                         label="Item"
                         floatingLabel
                         style={{width: '200px'}}
                     />
                     <Textfield
-                        onChange={() => {}}
+                        onChange={this.handleOnChange}
+                        id="price"
+                        name="price"
                         label="Price"
                         floatingLabel
                         style={{width: '200px'}}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button type='button' onClick={this.handleShowSnackbar}>Add</Button>
-                    <Button type='button' onClick={this.handleCloseDialog}>Cancel</Button>
+                    <Button type='button' onClick={this.handleAddItem}>Add</Button>
+                    <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
                 </DialogActions>
                 </Dialog>
                 <Snackbar
-                active={this.state.isSnackbarActive}
-                onClick={this.handleClickActionSnackbar}
-                onTimeout={this.handleTimeoutSnackbar}
-                action="Undo">Item Add.</Snackbar>               
+                    active={this.state.isSnackbarActive}
+                    onClick={this.handleClickActionSnackbar}
+                    onTimeout={this.handleTimeoutSnackbar}
+                >Item Add.</Snackbar>               
             </Content>
             </Layout>
         )

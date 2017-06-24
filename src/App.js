@@ -29,13 +29,6 @@ class App extends Component {
             ],
             isSnackbarActive: false 
         };
-
-        this.handleOnChange = this.handleOnChange.bind(this)
-        this.handleOpenDialog = this.handleOpenDialog.bind(this);
-        this.handleCloseDialog = this.handleCloseDialog.bind(this);
-        this.handleShowSnackbar = this.handleShowSnackbar.bind(this);
-        this.handleTimeoutSnackbar = this.handleTimeoutSnackbar.bind(this);
-        this.handleClickActionSnackbar = this.handleClickActionSnackbar.bind(this);
     }
 
     handleOnChange = (e,val) => {
@@ -66,20 +59,20 @@ class App extends Component {
         this.handleShowSnackbar()
     }
 
-    handleShowSnackbar() {
+    handleShowSnackbar = () => {
         this.setState({
             isSnackbarActive: true,
             btnBgColor: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16)
         });
     }
 
-    handleTimeoutSnackbar() {
+    handleTimeoutSnackbar = () => {
         this.setState({ 
             isSnackbarActive: false 
         });
     }
 
-    handleClickActionSnackbar() {
+    handleClickActionSnackbar = () => {
         this.setState({
             btnBgColor: ''
         });

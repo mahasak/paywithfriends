@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
+
 import { 
     Content,
     Layout,
@@ -13,6 +14,7 @@ import {
     Auth, 
     BillItemList,
     BillPayer,
+    Data,
     LoginPanel
 } from './components';
 import logo from './logo.png';
@@ -247,16 +249,17 @@ class App extends Component {
     }
 
     updateUserProfile = (user, billId) => {
-        let postData = {
-                name: user.displayName,
-                billID: this.state.billId
-        }
-            
-        let updates = {};
-            
-        updates['/users/' + user.uid] = postData;
+        if(user) {
+            let postData = {
+                    name: user.displayName,
+                    billID: this.state.billId
+            }
+            let updates = {};
+                
+            updates['/users/' + user.uid] = postData;
 
-        this.database.ref().update(updates);
+            this.database.ref().update(updates);
+        }
     }
 
 
@@ -275,13 +278,8 @@ class App extends Component {
         }
     }
 
-    renderApp = (user) => {
-        if (!user) {
-            return this.renderSignIn()
-        }
-        else
-        {
-            this.updateUserProfile(user, this.state.billId)
+    renderApp = () => {
+            this.updateUserProfile(this.state.user, this.state.billId)
             this.addcurrentUserToBill(this.state.billId)
             
             return (
@@ -331,14 +329,30 @@ class App extends Component {
                     </Content>
                     </Layout>
                 )
-        }
     }
-      
+
+    renderMain = (user) => {
+        if (!user) {
+            return this.renderSignIn()
+        }
+        return (
+        <Data
+            path='enabled'
+            renderLoading={() =>
+            <div style={{ padding: '1em', fontSize: '2em', textAlign: 'center' }}>
+                Connecting to Firebase…
+            </div>
+            }
+            renderData={(enabled) => this.renderApp()
+            }
+        />
+        )
+    }
 
     render() {
         return (
         <div className="App">
-            <Auth>{this.renderApp}</Auth>
+            <Auth>{this.renderMain}</Auth>
         </div>
         );
     }

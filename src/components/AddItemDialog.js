@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { 
+    Content,
     Dialog, 
     DialogContent,
     DialogTitle,
@@ -9,7 +10,7 @@ import {
 } from "react-mdl"
 
 export class AddItemDialog extends Component {
-    render() {
+    render2() {
         return <Dialog open={this.props.stateOpenDialog} onCancel={this.props.handleCloseDialog}>
                     <DialogTitle>New Item</DialogTitle>
                     <DialogContent>
@@ -35,5 +36,27 @@ export class AddItemDialog extends Component {
                         <Button type='button' onClick={this.props.handleCloseDialog}>Close</Button>
                     </DialogActions>
                 </Dialog>
+        
+    }
+
+    render() {
+        return <Content>&nbsp;&nbsp;&nbsp;&nbsp;<Textfield
+                            onChange={this.props.handleOnChange}
+                            id="itemId"
+                            name="item"
+                            label="Item"
+                            floatingLabel
+                            style={{width: '180px'}}
+                        />&nbsp;&nbsp;&nbsp;&nbsp;
+                        <Textfield
+                            onChange={this.props.handleOnChange}
+                            id="price"
+                            name="price"
+                            label="Price"
+                            floatingLabel
+                            style={{width: '80px'}}
+                        />&nbsp;&nbsp;
+                        <Button raised accent onClick={this.props.handleAddItem}>Add</Button>
+                        </Content>
     }
 }

@@ -246,17 +246,20 @@ class App extends Component {
             
             return (
                 <Layout fixedHeader>
+                    
                     <AppHeader onOpenNewItemDialog={this.handleOpenDialog} />
                     <AppMenu onSignOut={this.signOut}/>
                     <Content>
-                        <BillPayer payer={this.state.payer} />
-                        <BillItemList items={this.state.items} onDelete={this.removeItem} />
                         <AddItemDialog 
                             stateOpenDialog={this.state.openDialog} 
                             handleCloseDialog={this.handleCloseDialog}
                             handleOnChange={this.handleOnChange}
                             handleAddItem={this.handleAddItem}
                         />
+                        <BillPayer payer={this.state.payer} />
+                        <BillItemList items={this.state.items} onDelete={this.removeItem} />
+                        
+                        <textarea style={{display: 'none'}} id="url" rows="1" cols="30"></textarea>
                         <Snackbar
                             active={this.state.isSnackbarActive}
                             onClick={this.handleClickActionSnackbar}
@@ -267,6 +270,7 @@ class App extends Component {
                 )
         }
     }
+      
 
     render() {
         return (

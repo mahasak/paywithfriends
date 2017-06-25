@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker';
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
+import dialogPolyfill from 'dialog-polyfill'
 
 let config = {
     apiKey: "AIzaSyD8bvY3ZAiGiS1svEiz6jiwEOawg1Lp0qY",
@@ -18,6 +19,9 @@ let config = {
 
 firebase.initializeApp(config)
 window.$firebase = firebase
+
+const dialogs = document.querySelector("dialog"); dialogs && dialogPolyfill.registerDialog(dialogs);
+
 
 ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();

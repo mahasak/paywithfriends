@@ -294,7 +294,7 @@ class App extends Component {
                                 this.handleShowCopy()
                             }}
                             value={this.state.link}
-                            label="Link"
+                            label="Link (Click to copy &amp; share)"
                             floatingLabel
                         />
                         <AddItemDialog 

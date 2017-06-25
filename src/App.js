@@ -259,7 +259,6 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.props.location.query)
         return (
 
         <div className="App">

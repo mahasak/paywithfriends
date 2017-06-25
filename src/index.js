@@ -2,6 +2,7 @@ import * as firebase from 'firebase'
 import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker';
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
@@ -18,5 +19,5 @@ let config = {
 firebase.initializeApp(config)
 window.$firebase = firebase
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();

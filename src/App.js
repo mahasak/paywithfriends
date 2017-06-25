@@ -30,16 +30,22 @@ function convertFromFirebase(data) {
         })
 }
 
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(window.location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
 class App extends Component {
     auth = firebase.auth()
     
     constructor(props) {
         super(props)
-        console.log(this.auth.currentUser)
         this.database = firebase.database()
         this.state = { 
             user: this.auth.currentUser,
-            billId: 'id1',
+            billId: getUrlParameter('bill'),
             amount: 0,
             items: [],
             fields: [],
@@ -53,7 +59,7 @@ class App extends Component {
     }
 
     componentDidMount = () => {
-        let billId = 'id1'
+        let billId = this.state.billId
 
         let payerRef = this.database.ref(`bills/${billId}/users`);
         let itemRef = this.database.ref(`bills/${billId}/items`);
@@ -80,7 +86,7 @@ class App extends Component {
         let items = convertFromFirebase(snapshot.val())
         let total = this.getTotal(items)
         let summaryPrice = parseFloat((total * 1.1) + ((total* 1.1) * 0.07)).toFixed(2)
-        let amount = summaryPrice / 2
+        let amount = summaryPrice / payer.length
 
         let updates = {};
 
@@ -163,7 +169,7 @@ class App extends Component {
     addItem = (itemName, itemPrice) => {
         var items = this.state.items.slice()
         items.push({name: itemName, price: parseFloat(itemPrice)})
-        var billId = 'id1'
+        var billId = this.state.billId
         this.database.ref(`bills/${billId}/items`)
                         .push({name: itemName, own: "", price : parseFloat(itemPrice)});
         this.setState({ items: items })
@@ -198,7 +204,7 @@ class App extends Component {
     updateUserProfile = (user, billId) => {
         let postData = {
                 name: user.displayName,
-                billID: 'id1'
+                billID: this.state.billId
         }
             
         let updates = {};
@@ -230,7 +236,7 @@ class App extends Component {
         }
         else
         {
-            let billId = 'id1'
+            let billId = this.state.billId
             this.updateUserProfile(user, billId)
             this.addcurrentUserToBill(billId)
             

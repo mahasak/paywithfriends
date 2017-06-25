@@ -15,6 +15,7 @@ import {
     LoginPanel
 } from './components';
 import logo from './logo.png';
+import './App.css'
 
 function convertFromFirebase(data) {
         let emptyData = []
@@ -168,10 +169,15 @@ class App extends Component {
 
     addItem = (itemName, itemPrice) => {
         var items = this.state.items.slice()
-        items.push({name: itemName, price: parseFloat(itemPrice)})
-        this.database.ref(`bills/${this.state.billId}/items`)
-                        .push({name: itemName, own: "", price : parseFloat(itemPrice)});
+        var newPostKey = this.database.ref(`bills/${this.state.billId}/items`).push().key;
+        items.push({id: newPostKey, name: itemName, price: parseFloat(itemPrice)})
+        this.database.ref(`bills/${this.state.billId}/items/${newPostKey}`)
+                        .update({name: itemName, own: "", price : parseFloat(itemPrice)});
         this.setState({ items: items })
+    }
+
+    removeItem = (id) => {
+        this.database.ref(`/bills/${this.state.billId}/items/${id}`).remove()
     }
 
     signIn = () => {
@@ -244,7 +250,7 @@ class App extends Component {
                     <AppMenu onSignOut={this.signOut}/>
                     <Content>
                         <BillPayer payer={this.state.payer} />
-                        <BillItemList items={this.state.items} />
+                        <BillItemList items={this.state.items} onDelete={this.removeItem} />
                         <AddItemDialog 
                             stateOpenDialog={this.state.openDialog} 
                             handleCloseDialog={this.handleCloseDialog}

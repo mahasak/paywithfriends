@@ -31,16 +31,25 @@ function convertFromFirebase(data) {
 }
 
 class App extends Component {
+    auth = firebase.auth()
+    
     constructor(props) {
         super(props)
-
+        console.log(this.auth.currentUser)
         this.database = firebase.database()
         this.state = { 
+            user: this.auth.currentUser,
+            billId: 'id1',
+            amount: 0,
             items: [],
             fields: [],
             payer: [],
             isSnackbarActive: false 
         };
+    }
+    
+    componentWillUnmount () {
+        this.unsubscribe()
     }
 
     componentDidMount = () => {
@@ -51,6 +60,10 @@ class App extends Component {
 
         payerRef.on('value', this.onPayerUpdate, this.onPayerError)
         itemRef.on('value', this.onItemsUpdate, this.onItemsError)
+
+        this.auth.onAuthStateChanged(user => {
+            this.setState({ user })
+        })
     }
 
     onPayerUpdate = (snapshot) => {
@@ -69,10 +82,21 @@ class App extends Component {
         let summaryPrice = parseFloat((total * 1.1) + ((total* 1.1) * 0.07)).toFixed(2)
         let amount = summaryPrice / 2
 
+        let updates = {};
+
         payer = payer.map((x)=>{
+            
             x.amount = parseFloat(amount).toFixed(2)
+
+            let postData = {
+                amount: x.amount
+            }
+            updates['/bills/' + this.state.billId + '/users/'+  x.id] = postData;
+            if (x.id == this.state.user.uid) {
+                this.setState({amount : x.amount})
+            }
         })
-        
+
         this.setState({ items: items })
     }
 
@@ -149,8 +173,9 @@ class App extends Component {
         console.log("Login")
         let provider = new firebase.auth.FacebookAuthProvider()
         firebase.auth().signInWithRedirect(provider).then(result => {
-            let user = result.user
-            console.log('Signed in!!')
+            
+            console.log('Sign In');
+            
         }).catch(error => {
             alert('Cannot sign in: ' + String(error))
         })
@@ -170,36 +195,73 @@ class App extends Component {
         )
     }
 
+    updateUserProfile = (user, billId) => {
+        let postData = {
+                name: user.displayName,
+                billID: 'id1'
+        }
+            
+        let updates = {};
+            
+        updates['/users/' + user.uid] = postData;
+
+        this.database.ref().update(updates);
+    }
+
+
+    addcurrentUserToBill = (billId) => {
+        if (this.state.user) {
+            let billUpdates = {
+                amount: 0,
+                name: this.state.user.displayName
+            };
+
+            let updates = {}
+                
+            updates['/bills/'+billId+'/users/' + this.state.user.uid] = billUpdates;
+
+            this.database.ref().update(updates);
+        }
+    }
+
     renderApp = (user) => {
         if (!user) {
             return this.renderSignIn()
         }
-
-        return (
-        <Layout fixedHeader>
-            <AppHeader onOpenNewItemDialog={this.handleOpenDialog} />
-            <AppMenu onSignOut={this.signOut}/>
-            <Content>
-                <BillPayer payer={this.state.payer} />
-                <BillItemList items={this.state.items} />
-                <AddItemDialog 
-                    stateOpenDialog={this.state.openDialog} 
-                    handleCloseDialog={this.handleCloseDialog}
-                    handleOnChange={this.handleOnChange}
-                    handleAddItem={this.handleAddItem}
-                />
-                <Snackbar
-                    active={this.state.isSnackbarActive}
-                    onClick={this.handleClickActionSnackbar}
-                    onTimeout={this.handleTimeoutSnackbar}
-                >Item Add.</Snackbar>               
-            </Content>
-            </Layout>
-        )
+        else
+        {
+            let billId = 'id1'
+            this.updateUserProfile(user, billId)
+            this.addcurrentUserToBill(billId)
+            
+            return (
+                <Layout fixedHeader>
+                    <AppHeader onOpenNewItemDialog={this.handleOpenDialog} />
+                    <AppMenu onSignOut={this.signOut}/>
+                    <Content>
+                        <BillPayer payer={this.state.payer} />
+                        <BillItemList items={this.state.items} />
+                        <AddItemDialog 
+                            stateOpenDialog={this.state.openDialog} 
+                            handleCloseDialog={this.handleCloseDialog}
+                            handleOnChange={this.handleOnChange}
+                            handleAddItem={this.handleAddItem}
+                        />
+                        <Snackbar
+                            active={this.state.isSnackbarActive}
+                            onClick={this.handleClickActionSnackbar}
+                            onTimeout={this.handleTimeoutSnackbar}
+                        >Item Add.</Snackbar>               
+                    </Content>
+                    </Layout>
+                )
+        }
     }
 
     render() {
+        console.log(this.props.location.query)
         return (
+
         <div className="App">
             <Auth>{this.renderApp}</Auth>
         </div>

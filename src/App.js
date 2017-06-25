@@ -36,7 +36,7 @@ function getUrlParameter(name) {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var results = regex.exec(window.location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-};
+}
 
 class App extends Component {
     auth = firebase.auth()
@@ -44,6 +44,12 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.database = firebase.database()
+        let billId = getUrlParameter('bill')
+        if (!billId) {
+            console.log("no id")
+            var nextBillId = this.database.ref('bills').push().key;
+            window.location.href = "?bill="+nextBillId
+        }
         this.state = { 
             user: this.auth.currentUser,
             billId: getUrlParameter('bill'),

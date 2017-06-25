@@ -59,10 +59,8 @@ class App extends Component {
     }
 
     componentDidMount = () => {
-        let billId = this.state.billId
-
-        let payerRef = this.database.ref(`bills/${billId}/users`);
-        let itemRef = this.database.ref(`bills/${billId}/items`);
+        let payerRef = this.database.ref(`bills/${this.state.billId}/users`);
+        let itemRef = this.database.ref(`bills/${this.state.billId}/items`);
 
         payerRef.on('value', this.onPayerUpdate, this.onPayerError)
         itemRef.on('value', this.onItemsUpdate, this.onItemsError)
@@ -97,7 +95,9 @@ class App extends Component {
             let postData = {
                 amount: x.amount
             }
-            updates['/bills/' + this.state.billId + '/users/'+  x.id] = postData;
+
+            updates[`/bills/${this.state.billId}/users/${x.id}`] = postData;
+
             if (x.id == this.state.user.uid) {
                 this.setState({amount : x.amount})
             }
@@ -169,8 +169,7 @@ class App extends Component {
     addItem = (itemName, itemPrice) => {
         var items = this.state.items.slice()
         items.push({name: itemName, price: parseFloat(itemPrice)})
-        var billId = this.state.billId
-        this.database.ref(`bills/${billId}/items`)
+        this.database.ref(`bills/${this.state.billId}/items`)
                         .push({name: itemName, own: "", price : parseFloat(itemPrice)});
         this.setState({ items: items })
     }
@@ -224,7 +223,7 @@ class App extends Component {
 
             let updates = {}
                 
-            updates['/bills/'+billId+'/users/' + this.state.user.uid] = billUpdates;
+            updates[`/bills/${billId}/users/` + this.state.user.uid] = billUpdates;
 
             this.database.ref().update(updates);
         }
@@ -236,9 +235,8 @@ class App extends Component {
         }
         else
         {
-            let billId = this.state.billId
-            this.updateUserProfile(user, billId)
-            this.addcurrentUserToBill(billId)
+            this.updateUserProfile(user, this.state.billId)
+            this.addcurrentUserToBill(this.state.billId)
             
             return (
                 <Layout fixedHeader>
@@ -266,7 +264,6 @@ class App extends Component {
 
     render() {
         return (
-
         <div className="App">
             <Auth>{this.renderApp}</Auth>
         </div>

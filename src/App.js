@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { 
     Content,
     Layout,
-    Snackbar
+    Snackbar,
+    Textfield
 } from "react-mdl"
 import { 
     AddItemDialog,
@@ -18,8 +19,7 @@ import logo from './logo.png';
 import './App.css'
 
 function convertFromFirebase(data) {
-        let emptyData = []
-        if (data == null || data == undefined) {
+        if (data === null || data === undefined) {
             return []
         }
 
@@ -44,7 +44,7 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.database = firebase.database()
-        let billId = getUrlParameter('bill')
+        const billId = getUrlParameter('bill')
         if (!billId) {
             console.log("no id")
             var nextBillId = this.database.ref('bills').push().key;
@@ -52,12 +52,14 @@ class App extends Component {
         }
         this.state = { 
             user: this.auth.currentUser,
-            billId: getUrlParameter('bill'),
+            billId: billId,
+            link: `https://paywithfriends-e917e.firebaseapp.com/?bill=${billId}`,
             amount: 0,
             items: [],
             fields: [],
             payer: [],
-            isSnackbarActive: false 
+            isSnackbarActive: false ,
+            isSnackbarCopy: false 
         };
     }
     
@@ -111,9 +113,11 @@ class App extends Component {
 
             updates[`/bills/${this.state.billId}/users/${x.id}`] = postData;
 
-            if (x.id == this.state.user.uid) {
+            if (x.id === this.state.user.uid) {
                 this.setState({amount : x.amount})
             }
+
+            return x
         })
 
         this.setState({ items: items })
@@ -125,7 +129,7 @@ class App extends Component {
 
     getTotal = (items) => {
         if (items.length <= 0) return 0
-        if (items.length == 1) return parseFloat(items[0].price)
+        if (items.length === 1) return parseFloat(items[0].price)
         let tmp = items.reduce((a,b) => {
             return {price: parseFloat(a.price) + parseFloat(b.price)} 
         })
@@ -174,6 +178,25 @@ class App extends Component {
     }
 
     handleClickActionSnackbar = () => {
+        this.setState({
+            btnBgColor: ''
+        });
+    }
+
+    handleShowCopy = () => {
+        this.setState({
+            isSnackbarCopy: true,
+            btnBgColor: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16)
+        });
+    }
+
+    handleTimeoutCopy = () => {
+        this.setState({ 
+            isSnackbarCopy: false 
+        });
+    }
+
+    handleClickActionCopy = () => {
         this.setState({
             btnBgColor: ''
         });
@@ -262,6 +285,18 @@ class App extends Component {
                     <AppHeader onOpenNewItemDialog={this.handleOpenDialog} />
                     <AppMenu onSignOut={this.signOut} onCreateNew={this.createNewBill} />
                     <Content>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<Textfield
+                            id="urlText"
+                            onChange={() => {}}
+                            onClick={() => {
+                                document.getElementById("urlText").select();
+                                document.execCommand("copy");
+                                this.handleShowCopy()
+                            }}
+                            value={this.state.link}
+                            label="Link"
+                            floatingLabel
+                        />
                         <AddItemDialog 
                             stateOpenDialog={this.state.openDialog} 
                             handleCloseDialog={this.handleCloseDialog}
@@ -276,7 +311,12 @@ class App extends Component {
                             active={this.state.isSnackbarActive}
                             onClick={this.handleClickActionSnackbar}
                             onTimeout={this.handleTimeoutSnackbar}
-                        >Item Add.</Snackbar>               
+                        >Item Add.</Snackbar>
+                        <Snackbar
+                            active={this.state.isSnackbarCopy}
+                            onClick={this.handleClickActionCopy}
+                            onTimeout={this.handleTimeoutCopy}
+                        >Url Copied</Snackbar>               
                     </Content>
                     </Layout>
                 )

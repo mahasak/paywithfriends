@@ -24,6 +24,7 @@ export class AddItemDialog extends Component {
                         />
                         <Textfield
                             onChange={this.props.handleOnChange}
+                            pattern="-?[0-9]*(\.[0-9]+)?"error="Input is not a number!"
                             id="price"
                             name="price"
                             label="Price"
@@ -50,6 +51,8 @@ export class AddItemDialog extends Component {
                         />&nbsp;&nbsp;&nbsp;&nbsp;
                         <Textfield
                             onChange={this.props.handleOnChange}
+                            pattern="-?[0-9]*(\.[0-9]+)?"
+                            error="number only!!!"
                             id="price"
                             name="price"
                             label="Price"

@@ -1,31 +1,14 @@
 import React, { Component } from 'react';
 import { 
-    DataTable, 
     Icon,   
     List, 
     ListItem,
     ListItemAction,
-    ListItemContent,
-    TableHeader
+    ListItemContent
 } from "react-mdl"
 
 export class BillItemList extends Component {
-    render1() {
-        return <DataTable selectable style={{ width: '100%'}}
-                    shadow={0}
-                    rows={this.props.items}
-                >
-                    <TableHeader name="name" tooltip="รายการค่าใช้จ่าย">Items</TableHeader>
-                    <TableHeader numeric name="price" cellFormatter={(price) => price.toFixed(2) } tooltip="ราคา">Price</TableHeader>
-                </DataTable>
-    }
-
-    onDelete = (id) => {
-        console.log(`delete ${id}`)
-    }
-
     render() {
-        var lis = [];
 
         return <List style={{width: '100%'}}>
             {this.props.items.map(function(object,i) {

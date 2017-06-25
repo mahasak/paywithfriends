@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { 
     Header, 
-    Button,
     IconButton,
     Menu,
     MenuItem

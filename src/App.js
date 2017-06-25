@@ -68,11 +68,11 @@ class App extends Component {
         let total = this.getTotal(items)
         let summaryPrice = parseFloat((total * 1.1) + ((total* 1.1) * 0.07)).toFixed(2)
         let amount = summaryPrice / 2
-        console.log(amount)
-        console.log(payer)
+
         payer = payer.map((x)=>{
             x.amount = parseFloat(amount).toFixed(2)
         })
+        
         this.setState({ items: items })
     }
 

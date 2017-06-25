@@ -77,6 +77,12 @@ class App extends Component {
         })
     }
 
+    createNewBill = () => {
+        var nextBillId = this.database.ref('bills').push().key;
+        window.location.href = "?bill="+nextBillId
+    }
+    
+
     onPayerUpdate = (snapshot) => {
         let payer = convertFromFirebase(snapshot.val())
         this.setState({ payer: payer })
@@ -254,7 +260,7 @@ class App extends Component {
                 <Layout fixedHeader>
                     
                     <AppHeader onOpenNewItemDialog={this.handleOpenDialog} />
-                    <AppMenu onSignOut={this.signOut}/>
+                    <AppMenu onSignOut={this.signOut} onCreateNew={this.createNewBill} />
                     <Content>
                         <AddItemDialog 
                             stateOpenDialog={this.state.openDialog} 

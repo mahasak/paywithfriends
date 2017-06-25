@@ -162,13 +162,16 @@ class App extends Component {
     }
 
     handleAddItem = () => {
-        this.addItem(this.state.fields.item, this.state.fields.price)
-        document.getElementById("itemId").value = ''
-        document.getElementById("price").value = ''
-        this.setState({
-            openDialog: false
-        });
-        this.handleShowSnackbar()
+        if (!!this.state.fields.item && !isNaN(parseFloat(this.state.fields.price))) 
+        {
+            this.addItem(this.state.fields.item, this.state.fields.price)
+            document.getElementById("itemId").value = ''
+            document.getElementById("price").value = ''
+            this.setState({
+                openDialog: false
+            });
+            this.handleShowSnackbar()
+        }
     }
 
     handleShowSnackbar = () => {

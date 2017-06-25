@@ -12,12 +12,22 @@ export class AppMenu extends Component {
                 <Navigation>             
                     <dl>
                     <dt>
-                        <Switch ripple id="service" defaultChecked>Service Charge</Switch>
+                        <Switch 
+                            checked={this.props.serviceCharge} 
+                            ripple 
+                            onChange={this.props.onServiceChange}
+                            id="service" 
+                        >Service Charge</Switch>
                     </dt>
                     </dl>
                     <dl>
                     <dt>
-                        <Switch ripple id="vat" defaultChecked>VAT</Switch>
+                        <Switch 
+                            checked={this.props.vat} 
+                            ripple 
+                            onChange={this.props.onVatChange}
+                            id="vat" 
+                        >VAT</Switch>
                     </dt>
                     </dl>
                     <a href="#" onClick={this.props.onCreateNew}>Create New Bill</a>

@@ -55,6 +55,8 @@ class App extends Component {
             billId: billId,
             link: `https://paywithfriends-e917e.firebaseapp.com/?bill=${billId}`,
             amount: 0,
+            vat: true,
+            serviceCharge: true,
             items: [],
             fields: [],
             payer: [],
@@ -98,7 +100,9 @@ class App extends Component {
         let payer = this.state.payer
         let items = convertFromFirebase(snapshot.val())
         let total = this.getTotal(items)
-        let summaryPrice = parseFloat((total * 1.1) + ((total* 1.1) * 0.07)).toFixed(2)
+        let sc = this.state.serviceCharge ? 1.1 : 1;
+        let vat = this.state.vat ? 0.07 : 0;
+        let summaryPrice = parseFloat((total * sc) + ((total* sc) * vat)).toFixed(2)
         let amount = summaryPrice / payer.length
 
         let updates = {};
@@ -283,7 +287,13 @@ class App extends Component {
                 <Layout fixedHeader>
                     
                     <AppHeader onOpenNewItemDialog={this.handleOpenDialog} />
-                    <AppMenu onSignOut={this.signOut} onCreateNew={this.createNewBill} />
+                    <AppMenu 
+                        serviceCharge={this.state.serviceCharge}
+                        vat={this.state.vat}
+                        onServiceChange={()=>{ this.setState({serviceCharge: !this.state.serviceCharge}) }}
+                        onVatChange={()=>{ this.setState({vat: !this.state.vat}) }}
+                        onSignOut={this.signOut} 
+                        onCreateNew={this.createNewBill} />
                     <Content>
                         &nbsp;&nbsp;&nbsp;&nbsp;<Textfield
                             id="urlText"

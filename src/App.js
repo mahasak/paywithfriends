@@ -116,9 +116,10 @@ class App extends Component {
             }
 
             updates[`/bills/${this.state.billId}/users/${x.id}`] = postData;
-
-            if (x.id === this.state.user.uid) {
-                this.setState({amount : x.amount})
+            if (this.state.user) {
+                if (x.id === this.state.user.uid) {
+                    this.setState({amount : x.amount})
+                }
             }
 
             return x

@@ -20,8 +20,5 @@ let config = {
 firebase.initializeApp(config)
 window.$firebase = firebase
 
-const dialogs = document.querySelector("dialog"); dialogs && dialogPolyfill.registerDialog(dialogs);
-
-
 ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();
